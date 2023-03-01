@@ -1,0 +1,253 @@
+% SixtySecondsCV LaTeX template
+% Copyright © 2020 L. Gueroult <lgueroult-at-hotmail.com>
+% Licensed under the 3-Clause BSD License. See LICENSE file for details.
+%
+% Please visit https://github.com/LaGuer/SixtySecondsCV for the most
+% recent version! For bugs or feature requests, please open a new issue on
+% github.
+%
+% Contributors
+% ------------
+% * ifokkema
+% * Bertbk
+% * Hespe
+% * esben
+%
+% Attributions
+% ------------
+% * sixtysecondscv is based on the fortysecondcv class by Rene Wirnata
+%   (rene.wirnata@pandascience.net), released under the 3-Clause BSD license and available at
+%   https://github.com/PandaScience/FortySecondsCV/
+% * fortysecondscv is based on the twentysecondcv class by Carmine Spagnuolo
+%   (cspagnuolo@unisa.it), released under the MIT license and available at
+%   https://github.com/spagnuolocarmine/TwentySecondsCurriculumVitae-LaTex
+% * further attributions are indicated immediately before corresponding code
+
+
+%-------------------------------------------------------------------------------
+%                             ADDITIONAL PACKAGES
+%-------------------------------------------------------------------------------
+\documentclass[
+	a4paper,
+	% showframes,
+	% vline=2.2em,
+	%maincolor=cvgreen,
+	sidecolor=gray!50,
+	sectioncolor=materialblue,
+	subsectioncolor=materialindigo,
+	% itemtextcolor=black!80,
+	% sidebarwidth=0.4\paperwidth,
+	% topbottommargin=0.03\paperheight,
+	% leftrightmargin=20pt,
+	profilepicsize=3.5cm,
+	% profilepicborderwidth=3.5pt,
+	profilepicstyle=profilecircle,
+	profilepiczoom=1.0,
+	% profilepicxshift=0mm,
+	% profilepicyshift=0mm,
+	% profilepicrounding=1.0cm,
+	% logowidth=4.5cm,
+	% logospace=5mm,
+	% logoposition=before,
+]{CV}
+
+%-------------------------------------------------------------------------------
+%                             ADDITIONAL PACKAGES
+%-------------------------------------------------------------------------------
+% improve word spacing and hyphenation
+\usepackage{microtype}
+\usepackage{ragged2e}
+
+% uncomment in case you don't want any hyphenation
+% \usepackage[none]{hyphenat}
+
+% take care of proper font encoding
+\ifxetexorluatex
+	\usepackage{fontspec}
+	\defaultfontfeatures{Ligatures=TeX}
+%	\newfontfamily\headingfont[Path = fonts/]{segoeuib.ttf} % local font
+\else
+	\usepackage[utf8]{inputenc}
+	\usepackage[T1]{fontenc}
+%	\usepackage[sfdefault]{noto} % use noto google font
+\fi
+
+% enable mathematical syntax for some symbols like \varnothing
+\usepackage{amssymb}
+
+% bubble diagram configuration
+\usepackage{smartdiagram}
+\smartdiagramset{
+	% default font size is \large, so adjust to harmonize with sidebar layout
+	bubble center node font = \footnotesize,
+	bubble node font = \footnotesize,
+	% default: 4cm/2.5cm; make minimum diameter relative to sidebar size
+	bubble center node size = 0.4\sidebartextwidth,
+	bubble node size = 0.25\sidebartextwidth,
+	distance center/other bubbles = 1.5em,
+	% set center bubble color
+	bubble center node color = maincolor!70,
+	% define the list of colors usable in the diagram
+	set color list = {materiallime, materialamber,
+	materialcyan, materialblue, materialindigo},
+	% sets the opacity at which the bubbles are shown
+	bubble fill opacity = 0.8,
+}
+
+%-------------------------------------------------------------------------------
+%                            PERSONAL INFORMATION
+%-------------------------------------------------------------------------------
+%% mandatory information
+% your name
+\cvname{Simon Jakobsson}
+% job title/career
+
+
+
+%% optional information
+% profile picture
+%\cvprofilepic{pictures/Simon.jpg}
+% logo picture
+%\cvlogopic{pics/logo_txt.png}
+
+% NOTE: ordering in sidebar will mimic the following order
+% date of birth
+
+\cvbirthday{1996-03-25}
+% short address/location, use \newline if more than 1 line is required
+\cvaddress{Studievägen 11b, Linköping}
+% phone number
+\cvphone{+46 760171013}
+% skype ID
+% personal website
+\cvlinkedin{linkedin.com/in/simon-jakobsson-871252144/}
+\cvgithub{github.com/Znarvl}
+% email address
+\cvmail{simme.jakobsson@gmail.com}
+% pgp key
+\cvcar{Driving License Category B}
+
+
+%-------------------------------------------------------------------------------
+%                              SIDEBAR 1st PAGE
+%-------------------------------------------------------------------------------
+% add more profile sections to sidebar on first page
+\addtofrontsidebar{
+	% include gosquare national flags from https://github.com/gosquared/flags;
+	% naming according to ISO 3166-1 alpha-2 country codes
+    \profilesection{About me}
+
+
+	\profilesection{Languages}
+    \pointskill{\flag{pictures/Great-Britain.png}}{English}{5}
+    \pointskill{\flag{pictures/Sweden.jpeg}}{Swedish}{5}
+	\pointskill{\flag{pictures/Germany.png}}{German}{2}
+    \pointskill{\flag{pictures/Spain.png}}{Spanish}{2}
+    \profilesection{Programming languagues}
+    \begin{itemize}
+        \begin{minipage}{0.4\linewidth}
+            \item Python
+            \item JavaScript
+            \item TypeScript
+            \item Java/Kotlin
+        \end{minipage}
+        \begin{minipage}{0.4\linewidth}
+            \item C
+            \item C++
+            \item R
+            \item SQL
+        \end{minipage}
+        \end{itemize}
+
+    \profilesection{Tools and frameworks}
+    \begin{itemize}
+        \begin{minipage}{0.4\linewidth}
+            \item React
+            \item Vue
+            \item Pandas
+            \item Numpy
+        \end{minipage}
+        \begin{minipage}{0.4\linewidth}
+            \item Django
+            \item Flask
+            \item Git
+            \item Scikit-Learn
+        \end{minipage}
+        \end{itemize}
+
+
+
+}
+
+    
+
+%-------------------------------------------------------------------------------
+%                         TABLE ENTRIES RIGHT COLUMN
+%-------------------------------------------------------------------------------
+\begin{document}
+
+\makefrontsidebar
+
+\cvsection{Education}
+\cvsubsection{Masters and bachelor degree}
+\begin{cvtable}[1.5]
+	\cvitem{2018 - ongoing}{Software engineering and computer science}{Linköping University}
+		{Joint bachelor and masters programme. With a masters' orientation within large-scale software development}
+\end{cvtable}
+\cvsubsection{Bachelor degree}
+\begin{cvtable}[1.5]
+	\cvitem{2017 - 2018}{Information system}{Lund University}
+		{Half year studies before changing to Software engineering}
+\end{cvtable}
+\cvsubsection{Gymnasium}
+\begin{cvtable}[1.5]
+	\cvitem{2012 - 2015}{Social science programme}{Bladins}
+		{Social science with international relations orientation. The entire programme
+        was in English.}
+\end{cvtable}
+
+
+
+\cvsection{Working Experience}
+\begin{cvtable}[3]
+	\cvitem{Summer job 2017 - 2021}{Garden assistent}{Nova trädgård}{Help with planting, watering, and installing water systems}
+	
+    \cvitem{Feb 2016 -- Aug 2016}{Warehouse worker}{Personalcentralen}{
+		Consultant for various companies (Lantmännen, panduro hobby etc.) in the Malmö region.}
+
+	\cvitem{Sep 2015 -- Feb 2016}{Face 2 face sales }{Pepperminds}{Sales of monthly subscriptions for sightsavers and hjärnfonden.}
+\end{cvtable}
+
+
+
+
+\cvsection{Extra-Curricular Activities}
+\begin{cvtable}[3]
+    \cvitem{2022- 2023}{Reception responsible at the computer technology Section (STABEN) }{Linköping University}{Responsible for the computer technology section’s reception at Linköping University}
+
+    \cvitem{2020 - 2021}{Board member of the Computer Technology section}{Linköping University}{
+		My main responsibility was to ensure that there was a sense of well-being at the section for everyone during the pandemic, where I created various pandemic- proof event that the section could take part of.}
+
+	\cvitem{2019- 2020}{Bandmaster Computer Technology-band (D-band)}{Linköping University}{Main responsibility for D-band where the main task was to be the driving force for the band and to keep in touch with organizers.}
+\end{cvtable}
+\cvsection{Publications}
+\begin{cvtable}
+	\cvpubitem{Technical drawings and logistics in the construction industry}{Zhong et Al.}
+		{Bachelor thesis}{2021}
+\end{cvtable}
+
+
+
+
+% \newgeometry{
+% 	top=\topbottommargin,
+% 	bottom=\topbottommargin,
+% 	right=\leftrightmargin,
+% 	left=\leftrightmargin
+% }
+
+
+%\begin{Form}
+%  \digsigfield{5cm}{3cm}{\cvsignature}
+%\end{Form}
+\end{document}
