@@ -57,6 +57,7 @@
 % pre-define some colors the user can choose from
 
 \definecolor{white}{RGB}{255,255,255}
+\definecolor{cyan}{HTML}{23A696}
 \definecolor{darkgray}{HTML}{333333}
 \definecolor{gray}{HTML}{4D4D4D}
 \definecolor{lightgray}{HTML}{999999}

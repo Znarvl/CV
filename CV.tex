@@ -1,42 +1,13 @@
-% SixtySecondsCV LaTeX template
-% Copyright © 2020 L. Gueroult <lgueroult-at-hotmail.com>
-% Licensed under the 3-Clause BSD License. See LICENSE file for details.
-%
-% Please visit https://github.com/LaGuer/SixtySecondsCV for the most
-% recent version! For bugs or feature requests, please open a new issue on
-% github.
-%
-% Contributors
-% ------------
-% * ifokkema
-% * Bertbk
-% * Hespe
-% * esben
-%
-% Attributions
-% ------------
-% * sixtysecondscv is based on the fortysecondcv class by Rene Wirnata
-%   (rene.wirnata@pandascience.net), released under the 3-Clause BSD license and available at
-%   https://github.com/PandaScience/FortySecondsCV/
-% * fortysecondscv is based on the twentysecondcv class by Carmine Spagnuolo
-%   (cspagnuolo@unisa.it), released under the MIT license and available at
-%   https://github.com/spagnuolocarmine/TwentySecondsCurriculumVitae-LaTex
-% * further attributions are indicated immediately before corresponding code
-
-
-%-------------------------------------------------------------------------------
-%                             ADDITIONAL PACKAGES
-%-------------------------------------------------------------------------------
 \documentclass[
 	a4paper,
 	% showframes,
 	% vline=2.2em,
 	%maincolor=cvgreen,
-	sidecolor=gray!50,
+	sidecolor=cyan,
 	sectioncolor=materialblue,
 	subsectioncolor=materialindigo,
-	% itemtextcolor=black!80,
-	% sidebarwidth=0.4\paperwidth,
+	itemtextcolor=black!80,
+	sidebarwidth=0.32\paperwidth,
 	% topbottommargin=0.03\paperheight,
 	% leftrightmargin=20pt,
 	profilepicsize=3.5cm,
@@ -51,9 +22,6 @@
 	% logoposition=before,
 ]{CV}
 
-%-------------------------------------------------------------------------------
-%                             ADDITIONAL PACKAGES
-%-------------------------------------------------------------------------------
 % improve word spacing and hyphenation
 \usepackage{microtype}
 \usepackage{ragged2e}
@@ -71,28 +39,9 @@
 	\usepackage[T1]{fontenc}
 %	\usepackage[sfdefault]{noto} % use noto google font
 \fi
-
-% enable mathematical syntax for some symbols like \varnothing
 \usepackage{amssymb}
 
 % bubble diagram configuration
-\usepackage{smartdiagram}
-\smartdiagramset{
-	% default font size is \large, so adjust to harmonize with sidebar layout
-	bubble center node font = \footnotesize,
-	bubble node font = \footnotesize,
-	% default: 4cm/2.5cm; make minimum diameter relative to sidebar size
-	bubble center node size = 0.4\sidebartextwidth,
-	bubble node size = 0.25\sidebartextwidth,
-	distance center/other bubbles = 1.5em,
-	% set center bubble color
-	bubble center node color = maincolor!70,
-	% define the list of colors usable in the diagram
-	set color list = {materiallime, materialamber,
-	materialcyan, materialblue, materialindigo},
-	% sets the opacity at which the bubbles are shown
-	bubble fill opacity = 0.8,
-}
 
 %-------------------------------------------------------------------------------
 %                            PERSONAL INFORMATION
@@ -118,7 +67,6 @@
 \cvaddress{Studievägen 11b, Linköping}
 % phone number
 \cvphone{+46 760171013}
-% skype ID
 % personal website
 \cvlinkedin{linkedin.com/in/simon-jakobsson-871252144/}
 \cvgithub{github.com/Znarvl}
@@ -135,48 +83,34 @@
 \addtofrontsidebar{
 	% include gosquare national flags from https://github.com/gosquared/flags;
 	% naming according to ISO 3166-1 alpha-2 country codes
-    \profilesection{About me}
-
+    \profilesection{About Me}
+	Hello there! I'm Simon, a software engineer with a background in software engineering and computer science from Linköping University. At 27 years old, I'm driven by a passion for all things software, with a particular focus on AI and web development. During my free time, I enjoy immersing myself in these areas, tinkering and exploring new possibilities. When I'm not engrossed in software, I find solace in nature. Additionally, music holds a special place in my heart and serves as my primary hobby.
 
 	\profilesection{Languages}
     \pointskill{\flag{pictures/Great-Britain.png}}{English}{5}
     \pointskill{\flag{pictures/Sweden.jpeg}}{Swedish}{5}
 	\pointskill{\flag{pictures/Germany.png}}{German}{2}
     \pointskill{\flag{pictures/Spain.png}}{Spanish}{2}
-    \profilesection{Programming languagues}
+    \profilesection{Programming Languages}
     \begin{itemize}
-        \begin{minipage}{0.4\linewidth}
-            \item Python
-            \item JavaScript
-            \item TypeScript
-            \item Java/Kotlin
-        \end{minipage}
-        \begin{minipage}{0.4\linewidth}
-            \item C
-            \item C++
-            \item R
-            \item SQL
-        \end{minipage}
-        \end{itemize}
+        \item Python
+        \item JS/TS
+        \item Java/Kotlin
+        \item C
+        \item C++
+        \item R
+    \end{itemize}
 
-    \profilesection{Tools and frameworks}
+    \profilesection{Tools and Frameworks}
     \begin{itemize}
-        \begin{minipage}{0.4\linewidth}
-            \item React
-            \item Vue
-            \item Pandas
-            \item Numpy
-        \end{minipage}
-        \begin{minipage}{0.4\linewidth}
-            \item Django
-            \item Flask
-            \item Git
-            \item Scikit-Learn
-        \end{minipage}
-        \end{itemize}
-
-
-
+        \item React
+        \item Vue
+        \item Pandas
+        \item Numpy
+        \item Django
+        \item Git
+        \item Scikit-Learn
+    \end{itemize}
 }
 
     
@@ -189,65 +123,45 @@
 \makefrontsidebar
 
 \cvsection{Education}
-\cvsubsection{Masters and bachelor degree}
+\cvsubsection{Master's and Bachelor's Degree}
 \begin{cvtable}[1.5]
-	\cvitem{2018 - ongoing}{Software engineering and computer science}{Linköping University}
-		{Joint bachelor and masters programme. With a masters' orientation within large-scale software development}
+	\cvitem{2018 - 2023}{(Civ. ing.) Software Engineering and Computer Science}{Linköping University}
+		{Engaged in a joint Bachelor's and Master's program at Linköping University, specializing in large-scale software development.}
 \end{cvtable}
-\cvsubsection{Bachelor degree}
+\cvsubsection{Bachelor's Degree}
 \begin{cvtable}[1.5]
-	\cvitem{2017 - 2018}{Information system}{Lund University}
-		{Half year studies before changing to Software engineering}
+	\cvitem{2017 - 2018}{Information Systems}{Lund University}
+		{Studied Information Systems at Lund University for a period of six months before shifting focus to Software Engineering. }
 \end{cvtable}
 \cvsubsection{Gymnasium}
 \begin{cvtable}[1.5]
-	\cvitem{2012 - 2015}{Social science programme}{Bladins}
-		{Social science with international relations orientation. The entire programme
-        was in English.}
+	\cvitem{2012 - 2015}{Social Science Program}{Bladins}
+		{Enrolled in the Social Science Program at Bladins with a specialized focus on International Relations. Throughout the program, I had the opportunity to study all the subjects in English}
 \end{cvtable}
 
 
 
-\cvsection{Working Experience}
+\cvsection{Work Experience}
 \begin{cvtable}[3]
-	\cvitem{Summer job 2017 - 2021}{Garden assistent}{Nova trädgård}{Help with planting, watering, and installing water systems}
+	\cvitem{Jun 2023 - Aug 2023}{Summer Internship}{Maxar Technologies}{Participated in a summer internship at Maxar Technologies, gaining hands-on experience in full-stack development. Collaborated on the creation of an internal website from scratch}
+
+	\cvitem{Summer 2017 - 2021}{Garden Assistant}{Nova trädgård}{Provided support as a Garden Assistant, actively involved in tasks such as planting, watering, and installation of water systems.}
 	
-    \cvitem{Feb 2016 -- Aug 2016}{Warehouse worker}{Personalcentralen}{
-		Consultant for various companies (Lantmännen, panduro hobby etc.) in the Malmö region.}
+    \cvitem{Feb 2016 - Aug 2016}{Warehouse Worker}{Personalcentralen}{
+		Served as a Warehouse Worker, offering consulting services to multiple companies in the Malmö region, including Lantmännen and Panduro Hobby.}
 
-	\cvitem{Sep 2015 -- Feb 2016}{Face 2 face sales }{Pepperminds}{Sales of monthly subscriptions for sightsavers and hjärnfonden.}
+	\cvitem{Sep 2015 -- Feb 2016}{Face-to-Face Sales Representative}{Pepperminds}{Engaged as a Face-to-Face Sales Promoting and selling monthly subscriptions for organizations such as Sightsavers and Hjärnfonden.}
 \end{cvtable}
-
-
 
 
 \cvsection{Extra-Curricular Activities}
 \begin{cvtable}[3]
-    \cvitem{2022- 2023}{Reception responsible at the computer technology Section (STABEN) }{Linköping University}{Responsible for the computer technology section’s reception at Linköping University}
+    \cvitem{2022- 2023}{Reception Responsible at the Computer Technology Section (STABEN) }{Linköping University}{Responsible for managing the computer technology section's reception at Linköping University.}
 
-    \cvitem{2020 - 2021}{Board member of the Computer Technology section}{Linköping University}{
-		My main responsibility was to ensure that there was a sense of well-being at the section for everyone during the pandemic, where I created various pandemic- proof event that the section could take part of.}
+    \cvitem{2020 - 2021}{Board Member of the Computer Technology Section}{Linköping University}{
+		I actively contributed to the growth and development of the organization. I collaborated with fellow board members to implement strategic initiatives, organize events, and create a supportive environment for students during the pandemic. }
 
-	\cvitem{2019- 2020}{Bandmaster Computer Technology-band (D-band)}{Linköping University}{Main responsibility for D-band where the main task was to be the driving force for the band and to keep in touch with organizers.}
-\end{cvtable}
-\cvsection{Publications}
-\begin{cvtable}
-	\cvpubitem{Technical drawings and logistics in the construction industry}{Zhong et Al.}
-		{Bachelor thesis}{2021}
+	\cvitem{2019- 2020}{Bandmaster of Computer Technology Band (D-band)}{Linköping University}{I had a pivotal role in leading and motivating the band members. I effectively coordinated with organizers to ensure smooth communication and seamless collaboration.}
 \end{cvtable}
 
-
-
-
-% \newgeometry{
-% 	top=\topbottommargin,
-% 	bottom=\topbottommargin,
-% 	right=\leftrightmargin,
-% 	left=\leftrightmargin
-% }
-
-
-%\begin{Form}
-%  \digsigfield{5cm}{3cm}{\cvsignature}
-%\end{Form}
 \end{document}
