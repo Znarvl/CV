@@ -75,6 +75,8 @@
 \definecolor{materiallime}{HTML}{CDDC39}
 \definecolor{materialamber}{HTML}{FFC107}
 \definecolor{materialbrown}{HTML}{795548}
+\definecolor{materialsidecolor}{HTML}{BAD3F4}
+
 \definecolor{materialred}{HTML}{FF4436}
 \definecolor{materialorange}{HTML}{FF5722}
 \definecolor{cvblue}{HTML}{0E5484}
@@ -645,13 +647,13 @@
 %-------------------------------------------------------------------------------
 %                               SIDEBAR LAYOUT
 %-------------------------------------------------------------------------------
-% draw sidebar background on current page
+% draw sidebar background on current page bajs
 \newcommand{\drawSidebarBG}{%
 	\AddToShipoutPictureBG*{%
 		\begin{tikzpicture}[remember picture, overlay]
 			\node[
 				rectangle,
-				fill=sidecolor,
+				fill=materialsidecolor, 
 				anchor=north west,
 				minimum width=\sidebarwidth,
 				minimum height=\paperheight,
