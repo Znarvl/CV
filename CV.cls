@@ -670,7 +670,7 @@
       {\entrytitlestyle{\medium\textbf{#1}} & \entrydatestyle{\small #4} \\}  % Job title medium and bold, Date smaller
     {%
       \entrytitlestyle{\medium\textbf{#1}} & \entrydatestyle{\small #3} \\  % Job title medium and bold, Date aligned right, smaller
-      \entrylocationstyle{\small \textcolor{gray}{#2}} & \entrylocationstyle{\small #4} \\  % Organization and location on the right
+      \entrylocationstyle{\scriptsize \textcolor{gray}{#2}} & \entrylocationstyle{\small #4} \\  % Organization and location on the right
     }
     \ifstrempty{#5}
       {}
