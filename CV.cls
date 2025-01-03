@@ -1,793 +1,762 @@
-% SixtySecondsCV LaTeX class
-% Copyright © 2020 L. Gueroult <lgueroult-at-hotmail.com>
-% Licensed under the 3-Clause BSD License. See LICENSE file for details.
+%% Start of file `awesome-cv.cls'.
+% Awesome CV Class File
 %
-% Please visit https://github.com/LaGuer/SixtySecondsCV for the most
-% recent version! For bugs or feature requests, please open a new issue on
-% github.
+% This class has been downloaded from:
+% https://github.com/posquit0/Awesome-CV
 %
-% Contributors
-% ------------
-% * ifokkema
-% * Bertbk
-% * Hespe
-% * esben
+% Author:
+% Claud D. Park <posquit0.bj@gmail.com>
+% http://www.posquit0.com
 %
-% Attributions
-% ------------
-% * SixtySecondsCV LaTeX class is based on fortysecondscv class by
-%   René Wirnata <rene.wirnata@pandascience.net>,
-%   released under the 3-Clause BSD License and available under
-%   https://github.com/PandaScience/FortySecondsCV
-% * FortySecondsCV LaTeX class is based on twentysecondcv class by Carmine Spagnuolo
-%   (cspagnuolo@unisa.it), released under the MIT license and available under
-%   https://github.com/spagnuolocarmine/TwentySecondsCurriculumVitae-LaTex
+% Notes:
+% 1) This class file defines the structure and layout of the template file (cv.tex, resume.tex).
+% 2) It has been written in such a way that under most circumstances you
+% should not need to edit it.
+%
+% Class license:
+% LPPL v1.3c (http://www.latex-project.org/lppl)
+%
 
-% Licensed under the 3-Clause BSD License. See LICENSE file for details.
-% * further attributions are indicated immediately before corresponding code
+
 %-------------------------------------------------------------------------------
-%                           CLASS NAME AND VERSION
+%                Identification
 %-------------------------------------------------------------------------------
+\ProvidesClass{awesome-cv}[2017/02/05 v1.6.1 Awesome Curriculum Vitae Class]
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{sixtysecondscv}[2020/06/09 CV class]
 
 
 %-------------------------------------------------------------------------------
-%                            PROCESS CLASS OPTIONS
+%                Class options
+%
+% (need to be done before the external package loading, for example because
+% we need \paperwidth, \paperheight and \@ptsize to be defined before loading
+% geometry and fancyhdr)
 %-------------------------------------------------------------------------------
-%% load some required packages first
-% for easy color definitions; provides \definecolor; load before background pkg
-\RequirePackage[dvipsnames, svgnames, x11names]{xcolor}
-% for positioning text within the side column | use showboxes for visible frame
-\RequirePackage[absolute,overlay]{textpos}
-% provides key-value class options via \DeclareOptionX
-\RequirePackage{xkeyval}
-% provides \ifnumgreater{<int expr.>}{<int expr.>}{<true>}{<false>},
-% \apptocmd{<command>}{<code>}{<success>}{<failure>} and \newtoggle{<name>}
+% Options for draft or final
+\DeclareOption{draft}{\setlength\overfullrule{5pt}}
+\DeclareOption{final}{\setlength\overfullrule{0pt}}
+% Inherit options of article
+\DeclareOption*{%
+  \PassOptionsToClass{\CurrentOption}{article}
+}
+\ProcessOptions\relax
+\LoadClass{article}
+
+
+%-------------------------------------------------------------------------------
+%                3rd party packages
+%-------------------------------------------------------------------------------
+% Needed to make fixed length table
+\RequirePackage{array}
+% Needed to handle list environment
+\RequirePackage{enumitem}
+% Needed to handle text alignment
+\RequirePackage{ragged2e}
+% Needed to configure page layout
+\RequirePackage{geometry}
+% Needed to make header & footer efficiently
+\RequirePackage{fancyhdr}
+% Needed to manage colors
+\RequirePackage{xcolor}
+% Needed to use \ifxetex-\else-\fi statement
+\RequirePackage{ifxetex}
+% Needed to use \if-\then-\else statement
+\RequirePackage{xifthen}
+% Needed to strip chars from telephone number
+\RequirePackage{xstring}
+% Needed to use a toolbox of programming tools
 \RequirePackage{etoolbox}
-% enable simple math like +/- etc. on lengths
-\RequirePackage{calc}
-% change page margins
-\RequirePackage[
-	nohead,
-	nofoot,
-	nomarginpar,
-]{geometry}
+% Needed to change line spacing in specific environment
+\RequirePackage{setspace}
+% Needed to manage fonts
+\RequirePackage[quiet]{fontspec}
+% To support LaTeX quoting style
+\defaultfontfeatures{Ligatures=TeX}
+% Needed to manage math fonts
+\RequirePackage{unicode-math}
+% Needed to use icons from font-awesome
+\RequirePackage{fontawesome5}
+\RequirePackage{roboto}
+\RequirePackage[default,opentype]{sourcesanspro}
+% Needed for the photo ID
+\RequirePackage[skins]{tcolorbox}
+% Needed to deal a paragraphs
+\RequirePackage{parskip}
+% Needed to deal hyperlink
+\RequirePackage[hidelinks,unicode,pdfpagelabels=false]{hyperref}
+\hypersetup{%
+  pdftitle={},
+  pdfauthor={},
+  pdfsubject={},
+  pdfkeywords={}
+}
+% Solves issues Warning: File `cv.out' has changed
+\RequirePackage{bookmark}
 
-% pre-define some colors the user can choose from
+%-------------------------------------------------------------------------------
+%                Configuration for directory locations
+%-------------------------------------------------------------------------------
+% Configure an optional directory location for fonts(default: 'fonts/')
+% Not required anymore but left in place for backward compatability.
+\newcommand*{\fontdir}[1][fonts/]{\def\@fontdir{#1}}
 
-\definecolor{white}{RGB}{255,255,255}
-\definecolor{cyan}{HTML}{23A696}
+%-------------------------------------------------------------------------------
+%                Configuration for layout
+%-------------------------------------------------------------------------------
+%% Page Layout
+% Configure page margins with geometry
+\geometry{left=2.0cm, top=1.5cm, right=2.0cm, bottom=2.0cm, footskip=.5cm}
+
+%% Header & Footer
+% Set offset to each header and footer
+\fancyhfoffset{0em}
+% Remove head rule
+\renewcommand{\headrulewidth}{0pt}
+% Clear all header & footer fields
+\fancyhf{}
+% Enable if you want to make header or footer using fancyhdr
+\pagestyle{fancy}
+
+
+%-------------------------------------------------------------------------------
+%                Configuration for colors
+%-------------------------------------------------------------------------------
+% Gray-scale colors
+\definecolor{white}{HTML}{FFFFFF}
+\definecolor{black}{HTML}{000000}
 \definecolor{darkgray}{HTML}{333333}
-\definecolor{gray}{HTML}{4D4D4D}
+\definecolor{gray}{HTML}{5D5D5D}
 \definecolor{lightgray}{HTML}{999999}
+% Basic colors
 \definecolor{green}{HTML}{C2E15F}
 \definecolor{orange}{HTML}{FDA333}
 \definecolor{purple}{HTML}{D3A4F9}
 \definecolor{red}{HTML}{FB4485}
 \definecolor{blue}{HTML}{6CE0F1}
-\definecolor{materialpurple}{HTML}{9C27B0}
-\definecolor{materialindigo}{HTML}{3F51B5}
-\definecolor{materialblue}{HTML}{2196F3}
-\definecolor{materialcyan}{HTML}{00BCD4}
-\definecolor{materialteal}{HTML}{009688}
-\definecolor{materialgreen}{HTML}{4CAF50}
-\definecolor{materiallime}{HTML}{CDDC39}
-\definecolor{materialamber}{HTML}{FFC107}
-\definecolor{materialbrown}{HTML}{795548}
-\definecolor{materialsidecolor}{HTML}{BAD3F4}
+% Text colors
+\definecolor{darktext}{HTML}{414141}
+\colorlet{text}{darkgray}
+\colorlet{graytext}{gray}
+\colorlet{lighttext}{lightgray}
+\colorlet{sectiondivider}{gray}
+% Awesome colors
+\definecolor{awesome-emerald}{HTML}{00A388}
+\definecolor{awesome-skyblue}{HTML}{0395DE}
+\definecolor{awesome-red}{HTML}{DC3522}
+\definecolor{awesome-pink}{HTML}{EF4089}
+\definecolor{awesome-orange}{HTML}{FF6138}
+\definecolor{awesome-nephritis}{HTML}{27AE60}
+\definecolor{awesome-concrete}{HTML}{95A5A6}
+\definecolor{awesome-darknight}{HTML}{131A28}
+\colorlet{awesome}{awesome-red}
 
-\definecolor{materialred}{HTML}{FF4436}
-\definecolor{materialorange}{HTML}{FF5722}
-\definecolor{cvblue}{HTML}{0E5484}
-\definecolor{cvgreen}{HTML}{007170}
-\definecolor{cvred}{HTML}{8B0000}
-\definecolor{cvsidecolor}{HTML}{E7E7E7}
-\definecolor{cvsectioncolor}{HTML}{0395DE}
-\definecolor{cvsubsectioncolor}{HTML}{4D4D4D}
-% set default values
-\colorlet{maincolor}{cvblue}
-\colorlet{sidecolor}{cvsidecolor}
-\colorlet{sectioncolor}{cvsectioncolor}
-\colorlet{subsectioncolor}{cvsubsectioncolor}
-\colorlet{itemtextcolor}{black!90}
-% colors for document body (right column)
-% let user define main color
-\DeclareOptionX{maincolor}{\colorlet{maincolor}{#1}}
-\DeclareOptionX{sidecolor}{\colorlet{sidecolor}{#1}}
-\DeclareOptionX{sectioncolor}{\colorlet{sectioncolor}{#1}}
-\DeclareOptionX{subsectioncolor}{\colorlet{subsectioncolor}{#1}}
-\DeclareOptionX{itemtextcolor}{\colorlet{itemtextcolor}{#1}}
+% Boolean value to switch section color highlighting
+\newbool{acvSectionColorHighlight}
+\setbool{acvSectionColorHighlight}{true}
 
-% set page margins
-\newlength\sidebarwidth%
-\newlength\topbottommargin%
-\newlength\leftrightmargin%
-\newlength\sidebartextwidth
-% default values
-\setlength{\sidebarwidth}{0.34\paperwidth}
-\setlength{\topbottommargin}{0.02\paperheight}
-\setlength{\leftrightmargin}{0.02\paperwidth}
-% user overwrites
-\DeclareOptionX{sidebarwidth}{\setlength{\sidebarwidth}{#1}}
-\DeclareOptionX{topbottommargin}{\setlength{\topbottommargin}{#1}}
-\DeclareOptionX{leftrightmargin}{\setlength{\leftrightmargin}{#1}}
-
-% profile picture settings
-\newlength\profilepicsize%
-\setlength{\profilepicsize}{0.7\sidebarwidth}
-\DeclareOptionX{profilepicsize}{\setlength{\profilepicsize}{#1}}
-\newlength\profilepicborderwidth%
-\setlength{\profilepicborderwidth}{3.5pt}
-\DeclareOptionX{profilepicborderwidth}{\setlength{\profilepicborderwidth}{#1}}
-\newcommand*{\profilepicstyle}{}
-\DeclareOptionX{profilepicstyle}{\renewcommand{\profilepicstyle}{#1}}
-\newcommand*{\profilepiczoom}{}
-\DeclareOptionX{profilepiczoom}{\renewcommand{\profilepiczoom}{#1}}
-\newlength\profilepicxshift
-\setlength{\profilepicxshift}{0mm}
-\DeclareOptionX{profilepicxshift}{\setlength{\profilepicxshift}{#1}}
-\newlength\profilepicyshift
-\setlength{\profilepicyshift}{0mm}
-\DeclareOptionX{profilepicyshift}{\setlength{\profilepicyshift}{#1}}
-\newlength\profilepicrounding
-\setlength{\profilepicrounding}{0.15\sidebarwidth}
-\DeclareOptionX{profilepicrounding}{\setlength{\profilepicrounding}{#1}}
-
-% logo settings
-\newlength\logowidth%
-\setlength{\logowidth}{\profilepicsize}
-\DeclareOptionX{logowidth}{\setlength{\logowidth}{#1}}
-\newlength\logospace%
-\DeclareOptionX{logospace}{\setlength{\logospace}{#1}}
-\newcommand*{\logoposition}{}
-\DeclareOptionX{logoposition}{\renewcommand{\logoposition}{#1}}
-
-% show sidebar and page margins
-\newtoggle{tshowframes}
-\togglefalse{tshowframes}
-\DeclareOptionX{showframes}{
-	\geometry{showframe}
-	\TPoptions{showboxes=true}
-	\toggletrue{tshowframes}
-	% adding \hline in \newenvironment directly doesn't work, so do it here...
-	\AtBeginDocument{\apptocmd{\personaldata}{\hline}{}{}}
+% Awesome section color
+\def\@sectioncolor#1#2#3{%
+  \ifbool{acvSectionColorHighlight}{{\color{awesome}#1#2#3}}{#1#2#3}%
 }
-
-% draw vertical guideline
-\newcommand{\plotvline}{}
-\DeclareOptionX{vline}{%
-	% must be defined here as macro, b/c tikz won't expand absolute length in
-	% \backgroundsetup -- BUG?
-	\renewcommand{\plotvline}{%
-		\draw [thick, red, opacity=0.7]
-		(\leftrightmargin + #1, 0) -- (\leftrightmargin + #1, -\paperheight);
-	}
-}
-
-% pass further options to base class and load it
-\DeclareOptionX*{\PassOptionsToClass{\CurrentOption}{article}}
-\ProcessOptionsX\relax
-\LoadClass{article}
-
-% compute "inner" margin of sidebar automatically;
-% must come after \sidebarwidth and \leftrightmargin possibly changed by user
-\setlength{\sidebartextwidth}{\sidebarwidth - 2\leftrightmargin}
-
-% let geometry package perform the changes;
-% must come after loading the base class to prevent overwriting
-\geometry{
-	top=\topbottommargin,
-	bottom=\topbottommargin,
-	left=\sidebarwidth + \leftrightmargin,
-	right=\leftrightmargin,
-}
-
-%-------------------------------------------------------------------------------
-%                              REQUIRED PACKAGES
-%-------------------------------------------------------------------------------
-% font configuration
-%\RequirePackage[sfdefault]{ClearSans}
-
-% use as workaround for spacing problem when TikZ picture is not in paragraph;
-% details: https://tex.stackexchange.com/a/435790
-\RequirePackage[texcoord]{eso-pic}
-
-% for easy section style definitions
-\RequirePackage{titlesec}
-
-% loads graphicx, provides align=c option for vertical alignment w.r.t. text
-\RequirePackage{graphbox}
-
-% provides X column type for automatic length calculations
-\RequirePackage{tabularx}
-
-% take care of compiler-specific packages
-\RequirePackage{ifluatex}
-\RequirePackage{ifxetex}
-\newif\ifxetexorluatex
-\ifxetex
-	\xetexorluatextrue
-\else
-	\ifluatex
-		\xetexorluatextrue
-	\else
-		\xetexorluatexfalse
-	\fi
-\fi
-
-% pictures, icons and drawings
-\ifxetexorluatex
-	%\RequirePackage{fontawesome5}
-	\RequirePackage{fontawesome}
-	\RequirePackage{academicons}
-\else
-	\RequirePackage{fontawesome}
-\fi
-\RequirePackage{tikz}
-\usetikzlibrary{arrows, backgrounds}
-
-% provides \xrfill for horizontal rules
-\RequirePackage{xhfill}
-
-% provides basic conditional expressions
-\RequirePackage{ifthen}
-
-% enable multiple optional arguments in macros
-\RequirePackage{xparse}
-
-% enable links
-\RequirePackage[hidelinks]{hyperref}
-
 
 
 %-------------------------------------------------------------------------------
-%                          DERIVED COLOR DEFINITIONS
+%                Configuration for fonts
 %-------------------------------------------------------------------------------
-% profile section color (sidebar/left column)
-\colorlet{pseccolor}{black}
-% color used for all icon arguments
-\colorlet{iconcolor}{maincolor!90}
-
-% color definitions for TikZ drawings
-\colorlet{wheelchartlabelcolor}{black}
-\colorlet{wheeltextcolor}{black!80!white}
-% color of unfilled skill points / bar / chart label
-\colorlet{skillbg}{black!25}
+\newcommand*{\headerfont}{\roboto}
+\newcommand*{\headerfontlight}{\robotolight}
+\newcommand*{\footerfont}{\sourcesanspro}
+\newcommand*{\bodyfont}{\sourcesanspro}
+\newcommand*{\bodyfontlight}{\sourcesansprolight}
 
 %-------------------------------------------------------------------------------
-%                          Tiny watermark
+%                Configuration for styles
 %-------------------------------------------------------------------------------
+% Configure styles for each CV elements
+% For fundamental structures
+\newcommand*{\headerfirstnamestyle}[1]{{\fontsize{32pt}{1em}\headerfontlight\color{graytext} #1}}
+\newcommand*{\headerlastnamestyle}[1]{{\fontsize{32pt}{1em}\headerfont\bfseries\color{text} #1}}
+\newcommand*{\headerpositionstyle}[1]{{\fontsize{7.6pt}{1em}\bodyfont\scshape\color{awesome} #1}}
+\newcommand*{\headeraddressstyle}[1]{{\fontsize{8pt}{1em}\headerfont\itshape\color{lighttext} #1}}
+\newcommand*{\headersocialstyle}[1]{{\fontsize{6.8pt}{1em}\headerfont\color{text} #1}}
+\newcommand*{\headerquotestyle}[1]{{\fontsize{9pt}{1em}\bodyfont\itshape\color{darktext} #1}}
+\newcommand*{\footerstyle}[1]{{\fontsize{8pt}{1em}\footerfont\scshape\color{lighttext} #1}}
+\newcommand*{\sectionstyle}[1]{{\fontsize{16pt}{1em}\bodyfont\bfseries\color{text}\@sectioncolor #1}}
+\newcommand*{\subsectionstyle}[1]{{\fontsize{12pt}{1em}\bodyfont\scshape\textcolor{text}{#1}}}
+\newcommand*{\paragraphstyle}{\fontsize{9pt}{1em}\bodyfontlight\upshape\color{text}}
 
-\newcommand\watermark[1]{%
-	#1%
-	\sbox0{#1}%
-	\llap{%
-		\makebox[\wd0][c]{%  hor. centering
-			\raisebox{.5\ht0}{%  approx. vert. centering
-				\csname Gin@isotrue\endcsname% = "keepaspectratio"
-				\resizebox*{.8\ht0}{.8\ht0}{% Scale down (the height is also used for the width to avoid the surrounding spaces)
-					\parbox{10em}{% Allow line breaks
-						\color{black!90}%  
-						PDF seal issued by \cvsignature
-					}%
-				}}}}%
-}
+% For elements of entry
+\newcommand*{\entrytitlestyle}[1]{{\fontsize{10pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
+\newcommand*{\entrypositionstyle}[1]{{\fontsize{8pt}{1em}\bodyfont\scshape\color{graytext} #1}}
+\newcommand*{\entrydatestyle}[1]{{\fontsize{8pt}{1em}\bodyfontlight\slshape\color{graytext} #1}}
+\newcommand*{\entrylocationstyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\slshape\color{awesome} #1}}
+\newcommand*{\descriptionstyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\upshape\color{text} #1}}
 
-%-------------------------------------------------------------------------------
-%                      GLOBAL LAYOUT AND HEADINGS STYLE
-%-------------------------------------------------------------------------------
-% remove headers and footers
-\pagestyle{empty}
+% For elements of subentry
+\newcommand*{\subentrytitlestyle}[1]{{\fontsize{8pt}{1em}\bodyfont\mdseries\color{graytext} #1}}
+\newcommand*{\subentrypositionstyle}[1]{{\fontsize{7pt}{1em}\bodyfont\scshape\color{graytext} #1}}
+\newcommand*{\subentrydatestyle}[1]{{\fontsize{7pt}{1em}\bodyfontlight\slshape\color{graytext} #1}}
+\newcommand*{\subentrylocationstyle}[1]{{\fontsize{7pt}{1em}\bodyfontlight\slshape\color{awesome} #1}}
+\newcommand*{\subdescriptionstyle}[1]{{\fontsize{8pt}{1em}\bodyfontlight\upshape\color{text} #1}}
 
-% globally disable paragraph indentation
-\setlength{\parindent}{0pt}
+% For elements of honor
+\newcommand*{\honortitlestyle}[1]{{\fontsize{9pt}{1em}\bodyfont\color{graytext} #1}}
+\newcommand*{\honorpositionstyle}[1]{{\fontsize{9pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
+\newcommand*{\honordatestyle}[1]{{\fontsize{9pt}{1em}\bodyfont\color{graytext} #1}}
+\newcommand*{\honorlocationstyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\slshape\color{awesome} #1}}
 
-% set space between paragraphs
-% \setlength{\parskip}{1ex}
+% For elements of skill
+\newcommand*{\skilltypestyle}[1]{{\fontsize{10pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
+\newcommand*{\skillsetstyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\color{text} #1}}
 
-% creates a rule after some text using remaining line width
-% usage: \xrfill[<raise>]{<width>}
-\newcommand*{\sectionline}[1]{#1~\xrfill[.5ex]{1pt}[pseccolor]}
-
-% section style for cv table headings in right column
-% \titleformat{<command>}[<shape>]{<format>}{<label>}{<sep>}{<before>}[<after>]
-\newcommand*{\cvsection}[1]{\section*{#1}}
-\titleformat{\section}%
-{\color{sectioncolor}\normalfont\bfseries\large}{}{0pt}{}
-\titlespacing*{\section}{0pt}{1.5ex}{1ex}
-
-% grey subsection style for right column
-\newcommand*{\cvsubsection}[1]{\subsection*{#1}}
-\titleformat{\subsection}%
-{\color{subsectioncolor}\normalfont\large}{}{0pt}{}
-
-% abuse subsubsection as profilesection in left column
-\newcommand*{\profilesection}[1]{\subsubsection*{#1}}
-\titleformat{\subsubsection}
-{\color{pseccolor}\normalfont\large}{}{0pt}{\color{pseccolor}\sectionline}
-% set spaces before and after profilesections: <left><before><after>
-% "starred version kills the indentation of the paragraph following the title"
-\titlespacing*{\subsubsection}{0pt}{1ex}{1ex}
+% For elements of the cover letter
+\newcommand*{\lettersectionstyle}[1]{{\fontsize{14pt}{1em}\bodyfont\bfseries\color{text}\@sectioncolor #1}}
+\newcommand*{\recipientaddressstyle}[1]{{\fontsize{9pt}{1em}\bodyfont\scshape\color{graytext} #1}}
+\newcommand*{\recipienttitlestyle}[1]{{\fontsize{11pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
+\newcommand*{\lettertitlestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\bfseries\color{darktext} \underline{#1}}}
+\newcommand*{\letterdatestyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\slshape\color{graytext} #1}}
+\newcommand*{\lettertextstyle}{\fontsize{10pt}{1.4em}\bodyfontlight\upshape\color{graytext}}
+\newcommand*{\letternamestyle}[1]{{\fontsize{10pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
+\newcommand*{\letterenclosurestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\slshape\color{lighttext} #1}}
 
 
 %-------------------------------------------------------------------------------
-%                              SIDEBAR ELEMENTS
+%                Commands for personal information
 %-------------------------------------------------------------------------------
-% mandatory personal information
-\newcommand*{\cvname}[1]{\renewcommand{\cvname}{#1}}
-\newcommand*{\cvjobtitle}[1]{\renewcommand{\cvjobtitle}{#1}}
+% Define photo ID
+% Usage: \photo[circle|rectangle,edge|noedge,left|right]{<path-to-image>}
+\newcommand{\photo}[2][circle,edge,left]{%
+  \def\@photo{#2}
+  \@for\tmp:=#1\do{%
+    \ifthenelse{\equal{\tmp}{circle} \or \equal{\tmp}{rectangle}}%
+      {\let\@photoshape\tmp}{}%
+    \ifthenelse{\equal{\tmp}{edge} \or \equal{\tmp}{noedge}}%
+      {\let\@photoedge\tmp}{}%
+    \ifthenelse{\equal{\tmp}{left} \or \equal{\tmp}{right}}%
+      {\let\@photoalign\tmp}{}%
+  }%
+}
+\def\@photoshape{circle}
+\def\@photoedge{edge}
+\def\@photoalign{left}
 
-% profile picture (optional)
-\newcommand{\plotprofilepicture}{}
-\newcommand*{\cvprofilepic}[1]{
-	\renewcommand{\cvprofilepic}{#1}
+% Define writer's name
+% Usage: \name{<firstname>}{<lastname>}
+% Usage: \firstname{<firstname>}
+% Usage: \lastname{<lastname>}
+% Usage: \familyname{<familyname>}
+\newcommand*{\name}[2]{\def\@firstname{#1}\def\@lastname{#2}}
+\newcommand*{\firstname}[1]{\def\@firstname{#1}}
+\newcommand*{\lastname}[1]{\def\@lastname{#1}}
+\newcommand*{\familyname}[1]{\def\@lastname{#1}}
+\def\@familyname{\@lastname}
 
-	\ifthenelse{\equal{\profilepicstyle}{profilecircle}}{
-		\renewcommand{\plotprofilepicture}{\profilecircle}
-	}{
-		\renewcommand{\plotprofilepicture}{\profileroundedcorners}
-	}
+% Define writer's address
+% Usage: \address{<address>}
+\newcommand*{\address}[1]{\def\@address{#1}}
+
+% Define writer's position
+% Usage: \position{<position>}
+\newcommand*{\position}[1]{\def\@position{#1}}
+
+% Defines writer's mobile (optional)
+% Usage: \mobile{<mobile number>}
+\newcommand*{\mobile}[1]
+{
+  \def\@mobile{#1}
+  \def\@teluri{tel:\@mobile}
+  % Strip unwanted characters
+  \StrDel{\@teluri}{ }[\@teluri]%
+  \StrDel{\@teluri}{-}[\@teluri]%
+  \StrDel{\@teluri}{(}[\@teluri]%
+  \StrDel{\@teluri}{)}[\@teluri]%
 }
 
-% additional logo (optional)
-\newcommand{\plotlogobefore}{}
-\newcommand{\plotlogoafter}{}
-\newcommand*{\cvlogopic}[1]{%
-	% default = before; if any other (incl. 'after') --> after
-	\ifthenelse{\equal{\logoposition}{before}}{%
-		\renewcommand{\plotlogobefore}{%
-			\begin{figure}\centering%
-				\includegraphics[align=c, width=\logowidth]{#1}%
-			\end{figure}
-			\vspace*{\logospace}%
-		}%
-	}{%
-		\renewcommand{\plotlogoafter}{%
-			\vspace*{\logospace}%
-			\begin{figure}\centering%
-				\includegraphics[align=c, width=\logowidth]{#1}%
-			\end{figure}
-		}%
-	}
+% Defines writer's email (optional)
+% Usage: \email{<email address>}
+\newcommand*{\email}[1]{\def\@email{#1}}
+
+% Defines writer's date of birth (optional)
+% Usage: \dateofbirth{<date>}
+\newcommand*{\dateofbirth}[1]{\def\@dateofbirth{#1}}
+
+% Defines writer's homepage (optional)
+% Usage: \homepage{<url>}
+\newcommand*{\homepage}[1]{\def\@homepage{#1}}
+
+% Defines writer's github (optional)
+% Usage: \github{<github-nick>}
+\newcommand*{\github}[1]{\def\@github{#1}}
+
+% Defines writer's gitlab (optional)
+% Usage: \gitlab{<gitlab-nick>}
+\newcommand*{\gitlab}[1]{\def\@gitlab{#1}}
+
+% Defines writer's bitbucket (optional)
+% Usage: \bitbucket{<bitbucket-nick>}
+\newcommand*{\bitbucket}[1]{\def\@bitbucket{#1}}
+
+% Defines writer's stackoverflow profile (optional)
+% Usage: \stackoverflow{<so userid>}{<so username>}
+%   e.g.https://stackoverflow.com/users/123456/sam-smith
+%       would be \stackoverflow{123456}{sam-smith}
+\newcommand*{\stackoverflow}[2]{\def\@stackoverflowid{#1}\def\@stackoverflowname{#2}}
+
+% Defines writer's linked-in (optional)
+% Usage: \linkedin{<linked-in-nick>}
+\newcommand*{\linkedin}[1]{\def\@linkedin{#1}}
+
+% Defines writer's orcid (optional)
+% Usage: \orcid{<orcid-num>}
+\newcommand*{\orcid}[1]{\def\@orcid{#1}}
+
+% Defines writer's twitter (optional)
+% Usage: \twitter{<twitter handle>}
+\newcommand*{\twitter}[1]{\def\@twitter{#1}}
+
+% Defines writer's Mastodon (optional)
+% Usage: \mastodon{<instance>}{<mastodon-nick>}
+\newcommand*{\mastodon}[2]{\def\@mastodoninstance{#1}\def\@mastodonname{#2}}
+
+% Defines writer's resarchgate (optional)
+% Usage: \researchgate{<researchgate-account>}
+\newcommand*{\researchgate}[1]{\def\@researchgate{#1}}
+
+% Defines writer's skype (optional)
+% Usage: \skype{<skype account>}
+\newcommand*{\skype}[1]{\def\@skype{#1}}
+
+% Defines writer's reddit (optional)
+% Usage: \reddit{<reddit account>}
+\newcommand*{\reddit}[1]{\def\@reddit{#1}}
+
+% Defines writer's xing (optional)
+% Usage: \xing{<xing name>}
+\newcommand*{\xing}[1]{\def\@xing{#1}}
+
+% Defines writer's medium profile (optional)
+% Usage: \medium{<medium account>}
+\newcommand*{\medium}[1]{\def\@medium{#1}}
+
+% Defines writer's kaggle (optional)
+% Usage: \kaggle{<kaggle handle>}
+\newcommand*{\kaggle}[1]{\def\@kaggle{#1}}
+
+% Defines writer's Hackerrank (optional)
+% Usage: \hackerrank{<Hackerrank profile name>}
+\newcommand*{\hackerrank}[1]{\def\@hackerrank{#1}}
+
+% Defines writer's google scholar profile (optional)
+% Usage: \googlescholar{<googlescholar userid>}{<googlescholar username>}
+% e.g.https://scholar.google.co.uk/citations?user=wpZDx1cAAAAJ
+% would be \googlescholar{wpZDx1cAAAAJ}{Name-to-display-next-icon}
+% If 'googlescholar-name' is not provided than it defaults to
+% '\firstname \lastname'
+\newcommand*{\googlescholar}[2]{%
+  \def\@googlescholarid{#1}%
+  \ifthenelse{\equal{#2}{}}{%
+    \def\@googlescholarname{\@firstname~\@lastname}%
+  }{%
+    \def\@googlescholarname{#2}%
+  }%
 }
 
-% social network item; \social{<icon>}{<url>}{<text>}
-\newcommand*{\social}[3]{%
-	\socialicon{#1} & \href{#2}{#3}\\%
+% Defines writer's extra information (optional)
+% Usage: \extrainfo{<extra information>}
+\newcommand*{\extrainfo}[1]{\def\@extrainfo{#1}}
+
+% Defines writer's quote (optional)
+% Usage: \quote{<quote>}
+\renewcommand*{\quote}[1]{\def\@quote{#1}}
+
+% Defines recipient's information (cover letter only)
+% Usage: \recipient{<recipient name>}{<recipient address>}
+% Usage: \recipientname{<recipient name>}
+% Usage: \recipientaddress{<recipient address>}
+\newcommand*{\recipient}[2]{\def\@recipientname{#1}\def\@recipientaddress{#2}}
+\newcommand*{\recipientname}[1]{\def\@recipientname{#1}}
+\newcommand*{\recipientaddress}[1]{\def\@recipientaddress{#1}}
+
+% Defines the title for letter (cover letter only, optional)
+% Usage: \lettertitle{<title>}
+\newcommand*{\lettertitle}[1]{\def\@lettertitle{#1}}
+
+% Defines the date for letter (cover letter only)
+% Usage: \letterdate{<date>}
+\newcommand*{\letterdate}[1]{\def\@letterdate{#1}}
+
+% Defines a message of opening for letter (cover letter only)
+% Usage: \letteropening{<message>}
+\newcommand*{\letteropening}[1]{\def\@letteropening{#1}}
+
+% Defines a message of closing for letter (cover letter only)
+% Usage: \letterclosing{<message>}
+\newcommand*{\letterclosing}[1]{\def\@letterclosing{#1}}
+
+% Defines an enclosure for letter (cover letter only, optional)
+% Usage: \letterenclosure[<enclosure name>]{<enclosure>}
+\newcommand*{\letterenclname}[1][Enclosure]{\def\@letterenclname{#1}}
+\newcommand*{\letterenclosure}[2][]{%
+  % if an optional argument is provided, use it to redefine \enclname
+  \ifthenelse{\equal{#1}{}}{}{\def\@letterenclname{#1}}
+  \def\@letterenclosure{#2}
 }
 
-% personal information item; \personal{<icon>}{<text>}
-\newcommand*{\personal}[2]{%
-	\circleicon{#1} & {#2}\\%
+
+%-------------------------------------------------------------------------------
+%                Commands for extra
+%-------------------------------------------------------------------------------
+%% Define helper macros a user can change easily
+% Header
+\newcommand{\acvHeaderNameDelim}{\space}
+\newcommand{\acvHeaderAfterNameSkip}{.4mm}
+\newcommand{\acvHeaderAfterPositionSkip}{.4mm}
+\newcommand{\acvHeaderAfterAddressSkip}{-.5mm}
+\newcommand{\acvHeaderIconSep}{\space}
+\newcommand{\acvHeaderSocialSep}{\quad\textbar\quad}
+\newcommand{\acvHeaderAfterSocialSkip}{6mm}
+\newcommand{\acvHeaderAfterQuoteSkip}{5mm}
+
+% Others
+\newcommand{\acvSectionTopSkip}{3mm}
+\newcommand{\acvSectionContentTopSkip}{2.5mm}
+
+
+%-------------------------------------------------------------------------------
+%                Commands for utilities
+%-------------------------------------------------------------------------------
+% Use to align an element of tabular table
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+% Use to draw horizontal line with specific thickness
+\def\vhrulefill#1{\leavevmode\leaders\hrule\@height#1\hfill \kern\z@}
+
+% Use to execute conditional statements by checking empty string
+\newcommand*{\ifempty}[3]{\ifthenelse{\isempty{#1}}{#2}{#3}}
+
+
+%-------------------------------------------------------------------------------
+%                Commands for elements of CV structure
+%-------------------------------------------------------------------------------
+% Define a header for CV
+% Usage: \makecvheader
+\newcommand*{\makecvheader}[1][C]{%
+  \newcommand*{\drawphoto}{%
+    \ifthenelse{\isundefined{\@photo}}{}{%
+      \newlength{\photodim}
+      \ifthenelse{\equal{\@photoshape}{circle}}%
+        {\setlength{\photodim}{1.3cm}}%
+        {\setlength{\photodim}{1.8cm}}%
+      \ifthenelse{\equal{\@photoedge}{edge}}%
+        {\def\@photoborder{darkgray}}%
+        {\def\@photoborder{none}}%
+      \begin{tikzpicture}%
+        \node[\@photoshape, draw=\@photoborder, line width=0.3mm, inner sep=\photodim, fill overzoom image=\@photo] () {};
+      \end{tikzpicture}
+    }%
+  }
+  \newlength{\headertextwidth}
+  \newlength{\headerphotowidth}
+  \ifthenelse{\isundefined{\@photo}}{
+    \setlength{\headertextwidth}{\textwidth}
+    \setlength{\headerphotowidth}{0cm}
+  }{%
+    \setlength{\headertextwidth}{0.76\textwidth}
+    \setlength{\headerphotowidth}{0.24\textwidth}
+  }%
+  \begin{minipage}[c]{\headerphotowidth}%
+    \ifthenelse{\equal{\@photoalign}{left}}{\raggedright\drawphoto}{}
+  \end{minipage}
+  \begin{minipage}[c]{\headertextwidth}
+    \ifthenelse{\equal{#1}{L}}{\raggedright}{\ifthenelse{\equal{#1}{R}}{\raggedleft}{\centering}}
+    \headerfirstnamestyle{\@firstname}\headerlastnamestyle{{}\acvHeaderNameDelim\@lastname}%
+    \\[\acvHeaderAfterNameSkip]%
+    \ifthenelse{\isundefined{\@position}}{}{\headerpositionstyle{\@position\\[\acvHeaderAfterPositionSkip]}}%
+    \ifthenelse{\isundefined{\@address}}{}{\headeraddressstyle{\@address\\[\acvHeaderAfterAddressSkip]}}%
+    \headersocialstyle{%
+      \newbool{isstart}%
+      \setbool{isstart}{true}%
+      \ifthenelse{\isundefined{\@mobile}}%
+        {}%
+        {%
+          \href{\@teluri}{\faMobile\acvHeaderIconSep\@mobile}%
+          \setbool{isstart}{false}%
+        }%
+      \ifthenelse{\isundefined{\@email}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{mailto:\@email}{\faEnvelope\acvHeaderIconSep\@email}%
+        }%
+      \ifthenelse{\isundefined{\@dateofbirth}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          % \mbox prevents wrapping of elements%
+          \mbox{\faBirthdayCake\acvHeaderIconSep\@dateofbirth}%
+        }%
+      \ifthenelse{\isundefined{\@homepage}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{http://\@homepage}{\faHome\acvHeaderIconSep\@homepage}%
+        }%
+      \ifthenelse{\isundefined{\@github}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://github.com/\@github}{\faGithubSquare\acvHeaderIconSep\@github}%
+        }%
+      \ifthenelse{\isundefined{\@gitlab}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://gitlab.com/\@gitlab}{\faGitlab\acvHeaderIconSep\@gitlab}%
+        }%
+      \ifthenelse{\isundefined{\@bitbucket}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://bitbucket.com/\@bitbucket}{\faBitbucket\acvHeaderIconSep\@bitbucket}%
+        }%
+      \ifthenelse{\isundefined{\@stackoverflowid}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://stackoverflow.com/users/\@stackoverflowid}{\faStackOverflow\acvHeaderIconSep\@stackoverflowname}%
+        }%
+      \ifthenelse{\isundefined{\@linkedin}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://www.linkedin.com/in/\@linkedin}{\faLinkedin\acvHeaderIconSep\@linkedin}%
+        }%
+      \ifthenelse{\isundefined{\@orcid}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://orcid.org/\@orcid}{\faOrcid\acvHeaderIconSep\@orcid}%
+        }%
+      \ifthenelse{\isundefined{\@twitter}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://twitter.com/\@twitter}{\faTwitter\acvHeaderIconSep\@twitter}%
+        }%
+      \ifthenelse{\isundefined{\@mastodonname}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://\@mastodoninstance/@\@mastodonname}{\faMastodon\acvHeaderIconSep\@mastodonname}%
+        }%
+      \ifthenelse{\isundefined{\@skype}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \faSkype\acvHeaderIconSep\@skype%
+        }%
+      \ifthenelse{\isundefined{\@reddit}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://www.reddit.com/user/\@reddit}{\faReddit\acvHeaderIconSep\@reddit}%
+        }%
+      \ifthenelse{\isundefined{\@researchgate}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://www.researchgate.net/profile/\@researchgate}{\faResearchgate\acvHeaderIconSep\@researchgate}%
+        }%
+      \ifthenelse{\isundefined{\@xing}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://www.xing.com/profile/\@xing}{\faXingSquare\acvHeaderIconSep\@xing}
+        }%
+      \ifthenelse{\isundefined{\@medium}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://medium.com/@\@medium}{\faMedium\acvHeaderIconSep\@medium}%
+        }%
+      \ifthenelse{\isundefined{\@kaggle}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://kaggle.com/\@kaggle}{\faKaggle\acvHeaderIconSep\@kaggle}%
+        }%
+      \ifthenelse{\isundefined{\@hackerrank}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://www.hackerrank.com/\@hackerrank}{\faHackerrank\acvHeaderIconSep\@hackerrank}%
+        }%
+      \ifthenelse{\isundefined{\@googlescholarid}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \href{https://scholar.google.com/citations?user=\@googlescholarid}{\faGraduationCap\acvHeaderIconSep\@googlescholarname}%
+        }%
+      \ifthenelse{\isundefined{\@extrainfo}}%
+        {}%
+        {%
+          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \@extrainfo%
+        }%
+    } \\[\acvHeaderAfterSocialSkip]%
+    \ifthenelse{\isundefined{\@quote}}%
+      {}%
+      {\headerquotestyle{\@quote\\}\vspace{\acvHeaderAfterQuoteSkip}}%
+  \end{minipage}%
+  \begin{minipage}[c]{\headerphotowidth}%
+    \ifthenelse{\equal{\@photoalign}{right}}{\raggedleft\drawphoto}{}
+  \end{minipage}
 }
 
-% other personal information as macro that can be used later. Usage:
-% \cvcustomdata{<Icon>}{<Text>}
-% icon can be taken from FontAwesome or Academicon for example
-\newcommand{\personaldata}{}
-\newcommand*{\cvcustomdata}[2]{%
-	\apptocmd{\personaldata}{\personal{#1}{#2}}{}{}%
+% Define a footer for CV
+% Usage: \makecvfooter{<left>}{<center>}{<right>}
+\newcommand*{\makecvfooter}[3]{%
+  \fancyfoot{}
+  \fancyfoot[L]{\footerstyle{#1}}
+  \fancyfoot[C]{\footerstyle{#2}}
+  \fancyfoot[R]{\footerstyle{#3}}
 }
 
-% useful shortcuts
-% NOTE: we use href instead of url so user can decide textformatting since url
-% automatically uses \texttt{} as format for the url
-\newcommand*{\cvbirthday}[1]{\cvcustomdata{\faUser}{#1}}
-\newcommand*{\cvaddress}[1]{\cvcustomdata{\faEnvelope}{#1}}
-\newcommand*{\cvphone}[1]{\cvcustomdata{\faPhone}{#1}}
-\newcommand*{\cvlinkedin}[1]{\cvcustomdata{\faLinkedin}{\href{https://www.linkedin.com/in/simon-jakobsson-871252144/}{Simon Jakobsson}}}
-\newcommand*{\cvgithub}[1]{\cvcustomdata{\faGithub}{\href{#1}{#1}}}
-\newcommand*{\cvcar}[1]{\cvcustomdata{\faCar}{#1}}
-
-
-%\newcommand*{\cvskype}[1]{\cvcustomdata{\faSkype}{\href{skype:#1?call}{#1}}}
-\newcommand*{\cvskype}[1]{\cvcustomdata{\faSkype}{\href{skype:#1?call}{#1}}}
-\newcommand*{\cvsite}[1]{\cvcustomdata{\faGlobe}{\href{https://znarvl.github.io/portfolio/}{znarvl.github.io/portfolio}}}
-\newcommand*{\cvmail}[1]{\cvcustomdata{\faAt}{\href{mailto:#1}{#1}}}
-\newcommand*{\cvkey}[2]{\cvcustomdata{\faKey}{%
-		\href{https://keyserver.ubuntu.com/pks/lookup?search=#2\&op=vindex\&fingerprint=on}{#1}%
-	}}
-
-% TODO find a cleaner solution for consistent spacing
-\newcommand{\nameandjob}{%
-	{\Huge\color{black}\cvname}\par%
-	\setlength{\parskip}{2ex}
-	{\Large\color{black!80}\cvjobtitle}\par%
-	\setlength{\parskip}{1ex}
+% Define a section for CV
+% Usage: \cvsection{<section-title>}
+\newcommand{\cvsection}[1]{%
+  \vspace{\acvSectionTopSkip}
+  \sectionstyle{#1}
+  \phantomsection
+  \color{sectiondivider}\vhrulefill{0.9pt}
 }
 
-\newcommand{\profileroundedcorners}{%
-	\begin{figure}\centering
-		% see TikZ/pgf v3.1.1 manual §2.11 (clipping), §14.5 (rounded corners),
-		% §12 (scopes), §13.2 (coordinate systems)
-		\begin{tikzpicture}[x=\profilepicsize, y=\profilepicsize]
-			\begin{scope}
-				\path[clip]
-				(0, 0) [sharp corners] --
-				(0, 1) [rounded corners=\profilepicrounding] --
-				(1, 1) [sharp corners] --
-				(1, 0) [rounded corners=\profilepicrounding] -- cycle;
-				\node[anchor=center, inner sep=0pt, xshift=\profilepicxshift,
-					yshift=\profilepicyshift] (profilepic) at (0.5, 0.5)
-				{\includegraphics[width=\profilepiczoom\profilepicsize]
-					{\cvprofilepic}};
-			\end{scope}
-			\ifdim \profilepicborderwidth > 0pt
-				\begin{scope}
-					\draw[line width=\profilepicborderwidth, color=iconcolor]
-					(0, 0) [sharp corners] --
-					(0, 1) [rounded corners=\profilepicrounding] --
-					(1, 1) [sharp corners] --
-					(1, 0) [rounded corners=\profilepicrounding] -- cycle;
-				\end{scope}
-			\fi
-		\end{tikzpicture}
-	\end{figure}
+% Define a subsection for CV
+% Usage: \cvsubsection{<subsection-title>}
+\newcommand{\cvsubsection}[1]{%
+  \vspace{\acvSectionContentTopSkip}
+  \vspace{-3mm}
+  \subsectionstyle{#1}
+  \phantomsection
 }
 
-\newcommand{\profilecircle}{%
-	\begin{figure}\centering
-		\begin{tikzpicture}[x=\profilepicsize, y=\profilepicsize]
-			\begin{scope}
-				\clip (0, 0) circle (0.5);
-				\node[anchor=center, inner sep=0pt, outer sep=0pt,
-					xshift=\profilepicxshift, yshift=\profilepicyshift]
-				(profilepic) at (0,0) {
-					\includegraphics[width=\profilepiczoom\profilepicsize]
-					{\cvprofilepic}};
-			\end{scope}
-			\ifdim \profilepicborderwidth > 0pt
-				\begin{scope}
-					\draw[line width=\profilepicborderwidth, color=iconcolor]
-					(0, 0) circle (0.5\profilepicsize);
-				\end{scope}
-			\fi
-		\end{tikzpicture}
-	\end{figure}
-}
-
-% table with 2 columns for icons and text
-% \icontable{<width 1st column>}{<space between columns>}{<arraystretch>}
-\newenvironment{icontable}[3][1]%
-{%
-\renewcommand{\arraystretch}{#1}% increase linespacing in tables; default=1
-\iftoggle{tshowframes}{%
-% https://tex.stackexchange.com/a/42331
-\tabularx{\sidebartextwidth}{|m{#2} | @{\hskip #3} | X|} \hline%
+% Define a paragraph for CV
+\newenvironment{cvparagraph}{%
+  \vspace{\acvSectionContentTopSkip}
+  \vspace{-3mm}
+  \paragraphstyle
 }{%
-\tabularx{\sidebartextwidth}{m{#2} @{\hskip #3} X}%
+  \par
+  \vspace{2mm}
 }
+
+% Define an environment for cventry
+\newenvironment{cventries}{%
+  \vspace{\acvSectionContentTopSkip}
+  \begin{center}
 }{%
-\endtabularx%
+  \end{center}
 }
-
-% icon style for personal information
-\newcommand*\circleicon[1]{%
-	\tikz[baseline = (char.base)]{%
-		\node[%
-			shape=circle,%
-			draw,%
-			inner sep=1pt,%
-			fill=iconcolor,%
-			maincolor,%
-			text=white,%
-			minimum size=\hsize%
-		] (char) {#1};%
-	}%
-}
-
-% icon style for social network
-\newcommand*{\socialicon}[1]{%
-	\resizebox{\hsize}{!}{\textcolor{iconcolor}{#1}}%
-}
-
-
-% make sure about me text stays in textbox frame
-\newcommand{\aboutme}[1]{\parbox[b]{\linewidth}{#1}}
-
-% uniform icon style for all skill icons, e.g. flags or fontawesome icons
-\newcommand{\cvicon}[1]{\makebox[1em]{\color{iconcolor} #1}}
-\newcommand{\flag}[1]{\includegraphics[align=c, width=1em]{#1}}
-
-% \pointskill[<indent>]{<icon>}{<description>}{<points>}[<maxpoints>] creates
-% | [indent] [icon]  description  \hfill  ? ? ? ? ? |
-% -- inspired by arravc.cls by LianTze Lim: https://github.com/liantze/AltaCV
-\NewDocumentCommand{\pointskill}{ O{0em} m m m O{5} }{%
-	\hspace{#1} \cvicon{#2} ~ #3 \hfill%
-	\foreach \x in {1,...,#5}{%
-			\space%
-			{\ifnumgreater{\x}{#4}{\color{skillbg}}{\color{iconcolor}}% from etoolbox
-				% don't use totalheight; see https://tex.stackexchange.com/a/41014
-				\raisebox{0.5\height-0.4ex}{\scriptsize\faCircle}%
-			}
-		}\par%
-}
-
-\newcommand{\barskill}[3]{
-	% remove 1pt in width to prevent overfull box warnings
-	\begin{tikzpicture}[x=\sidebartextwidth-1pt, y=2ex]
-		\draw[fill, skillbg, rounded corners=0.5em]
-		(0, 0) rectangle (1, 1);
-		\draw[fill, iconcolor!70, rounded corners=0.5em]
-		(0, 0) rectangle (#3/100, 1);
-		\node[above right] at (0, 1) {\cvicon{#1} ~ #2};
-	\end{tikzpicture}
-	\par
-}
-
-% \skill[<indent>]{<icon>}{<description>} creates in sidebar
-% | [indent] [icon]  some longer skill description  |
-\newcommand{\skill}[3][0em]{
-	\hspace{#1} \cvicon{#2} ~ \parbox{\linewidth-#1-2.5em}{#3} \hfill \par
-}
-
-\newcommand\skills{
-	~
-	\smartdiagram[bubble diagram]{
-		\textbf{Data}\\\textbf{Engineering},
-		\textbf{Full Stack}\\\textbf{Dev},
-		\textbf{~~~~~~~~OOP~~~~~~~~~},
-		\textbf{~~~~~~Machine~~~~~~}\\\textbf{~~Learning~~},
-		\textbf{~~~~~DevOps~~~~~}
-	}
-}
-
-% label for wheel charts
-\newcommand{\chartlabel}[1]{%
-	\begin{tikzpicture}
-		\node[
-			fill=skillbg!25, % interior color
-			anchor=base,
-			draw=skillbg, % line color
-			rounded corners,
-			inner xsep=1ex, % distance from left/right border to text
-			inner ysep=0.75ex, % distance top/bottom border to text
-			text height=1.5ex, % align text vertically in box (at least as resulting
-			text depth=.25ex   % effect)
-		]{#1};%
-	\end{tikzpicture}
+% Define an entry of cv information
+% Usage: \cventry{<position>}{<title>}{<location>}{<date>}{<description>}
+\newcommand*{\cventry}[5]{%
+  \vspace{-2.0mm}
+  \setlength\tabcolsep{0pt}
+  \setlength{\extrarowheight}{0pt}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 9cm} R{9cm}}
+    \ifempty{#2#3}
+      {\entrytitlestyle{\medium\textbf{#1}} & \entrydatestyle{\small #4} \\}  % Job title medium and bold, Date smaller
+    {%
+      \entrytitlestyle{\medium\textbf{#1}} & \entrydatestyle{\small #3} \\  % Job title medium and bold, Date aligned right, smaller
+      \entrylocationstyle{\small \textcolor{gray}{#2}} & \entrylocationstyle{\small #4} \\  % Organization and location on the right
+    }
+    \ifstrempty{#5}
+      {}
+      {\multicolumn{2}{L{\textwidth}}{\descriptionstyle{#5}} \\}  % Description of responsibilities
+  \end{tabular*}%
 }
 
 
-\newenvironment{sidebarminipage}%
-{\begin{minipage}{\sidebartextwidth}}%
-		{\end{minipage}}%
 
 
-\newenvironment{memberships}[1][1em]%
-{%
-	\iftoggle{tshowframes}{%
-		\tabularx{\sidebartextwidth}{|l | @{\hskip #1} | X|} \hline%
-	}{%
-		\tabularx{\sidebartextwidth}{l @{\hskip #1} X}%
-	}
+
+
+
+
+
+% Define an environment for cvsubentry
+\newenvironment{cvsubentries}{%
+  \begin{center}
 }{%
-	\endtabularx%
-}%
-
-
-\newcommand{\membership}[3][4em]{
-	\includegraphics[align=c,width=#1]{#2} & {#3} \\[3ex]
+  \end{center}
+}
+% Define a subentry of cv information
+% Usage: \cvsubentry{<position>}{<title>}{<date>}{<description>}
+\newcommand*{\cvsubentry}[4]{%
+  \setlength\tabcolsep{0pt}
+  \setlength{\extrarowheight}{0pt}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
+    \setlength\leftskip{0.2cm}
+    \subentrytitlestyle{#2} & \ifthenelse{\equal{#1}{}}
+      {\subentrydatestyle{#3}}{}
+    \ifthenelse{\equal{#1}{}}
+      {}
+      {\subentrypositionstyle{#1} & \subentrydatestyle{#3} \\}
+    \ifthenelse{\equal{#4}{}}
+      {}
+      {\multicolumn{2}{L{17.0cm}}{\subdescriptionstyle{#4}} \\}
+  \end{tabular*}
 }
 
-% adapted from https://tex.stackexchange.com/a/82729
-\newcommand{\wheelchart}[4][-90]{%
-	\def\outerradius{#2}%
-	\def\innerradius{#3}%
-	% Calculate total
-	\pgfmathsetmacro{\totalnum}{0}%
-	\foreach\value/\colour/\name in {#4} {%
-			\pgfmathparse{\value+\totalnum}%
-			\global\let\totalnum=\pgfmathresult%
-		}%
-	\begin{tikzpicture}
-
-		% Calculate the thickness and the middle line of the wheel
-		\pgfmathsetmacro{\wheelwidth}{\outerradius-\innerradius}
-		\pgfmathsetmacro{\midradius}{(\outerradius+\innerradius)/2}
-
-		% Rotate so we start from the top
-		\begin{scope}[rotate=#1, on background layer]
-			% Loop through each value set. \cumnum keeps track of where we are in the
-			% wheel
-			\pgfmathsetmacro{\cumnum}{0}
-			\foreach \value/\width/\colour/\name in {#4} {
-					\pgfmathsetmacro{\newcumnum}{\cumnum + \value/\totalnum*360}
-
-					% Calculate the percent value
-					\pgfmathsetmacro{\percentage}{\value/\totalnum*100}
-					% Calculate the mid angle of the colour segments to place the labels
-					\pgfmathsetmacro{\midangle}{-(\cumnum+\newcumnum)/2}
-
-					% This is necessary for the labels to align nicely
-					\pgfmathparse{
-						(-\midangle>180?"west":"east")
-					} \edef\textanchor{\pgfmathresult}
-					\pgfmathparse{
-						(-\midangle>180?"flush left":"flush right")
-					} \edef\textalign{\pgfmathresult}
-					\pgfmathsetmacro\labelshiftdir{1-2*(-\midangle<180)}
-
-					% Draw the color segments. Somehow, the \midrow units got lost, so
-					% we add 'pt' at the end. Not nice...
-					\filldraw[draw=white,fill=\colour]
-					(-\cumnum:\outerradius)
-					arc (-\cumnum:-(\newcumnum):\outerradius)
-					-- (-\newcumnum:\innerradius)
-					arc (-\newcumnum:-(\cumnum):\innerradius)
-					-- cycle;
-
-					% Draw the data labels
-					\draw [*-,thin,wheelchartlabelcolor] node [append after command={
-								(\midangle:\midradius pt) --
-								(\midangle:\outerradius + 1ex) --
-								(\tikzlastnode)}] at (\midangle:\outerradius + 1ex) [
-						xshift=\labelshiftdir*0.5cm,inner sep=1ex,
-						outer sep=0pt,
-						text width=\width,
-						anchor=\textanchor,
-						align=\textalign,
-						font=\small,
-						text=wheeltextcolor
-					]{\name};
-					% Set the old cumulated angle to the new value
-					\global\let\cumnum=\newcumnum
-				}
-		\end{scope}
-	\end{tikzpicture}\par
+% Define an environment for cvhonor
+\newenvironment{cvhonors}{%
+  \vspace{\acvSectionContentTopSkip}
+  \vspace{-2mm}
+  \begin{center}
+    \setlength\tabcolsep{0pt}
+    \setlength{\extrarowheight}{0pt}
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} C{1.5cm} L{\textwidth - 4.0cm} R{2.5cm}}
+}{%
+    \end{tabular*}
+  \end{center}
+}
+% Define a line of cv information(honor, award or something else)
+% Usage: \cvhonor{<position>}{<title>}{<location>}{<date>}
+\newcommand*{\cvhonor}[4]{%
+  \honordatestyle{#4} & \honorpositionstyle{#1}\ifempty{#2}{}{,} \honortitlestyle{#2} & \honorlocationstyle{#3} \\
 }
 
-\newcommand{\cvsignature}{
-	\vfill
-	{\large\bfseries\color{maincolor!70}\today \hfill \cvname}
+% Define an environment for cvskill
+\newenvironment{cvskills}{%
+  \vspace{\acvSectionContentTopSkip}
+  \vspace{-2.0mm}
+  \begin{center}
+    \setlength\tabcolsep{1ex}
+    \setlength{\extrarowheight}{0pt}
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} r L{\textwidth * \real{0.9}}}
+}{%
+    \end{tabular*}
+  \end{center}
+}
+% Define a line of cv information(skill)
+% Usage: \cvskill{<type>}{<skillset>}
+\newcommand*{\cvskill}[2]{%
+	\skilltypestyle{#1} & \skillsetstyle{#2} \\
+}
+
+% Define an environment for cvitems(for cventry)
+\newenvironment{cvitems}{%
+  \vspace{-4.0mm}
+  \begin{justify}
+  \begin{itemize}[leftmargin=2ex, nosep, noitemsep]
+    \setlength{\parskip}{0pt}
+    \renewcommand{\labelitemi}{\bullet}
+}{%
+  \end{itemize}
+  \end{justify}
+  \vspace{-4.0mm}
 }
 
 
-%-------------------------------------------------------------------------------
-%                               SIDEBAR LAYOUT
-%-------------------------------------------------------------------------------
-% draw sidebar background on current page bajs
-\newcommand{\drawSidebarBG}{%
-	\AddToShipoutPictureBG*{%
-		\begin{tikzpicture}[remember picture, overlay]
-			\node[
-				rectangle,
-				fill=materialsidecolor,
-				anchor=north west,
-				minimum width=\sidebarwidth,
-				minimum height=\paperheight,
-			]{};%
-			% plot vertical red guideline
-			\plotvline%
-		\end{tikzpicture}%
-	}%
-}
-
-% use textpos to position textblock within TikZ background; we have to use
-% the starred version for absolute values here, b/c we use \pagewidth directly
-% instead of \setlength{\TPHorizModule}{<dimen>}, which seems to be "absolute"
-% as opposed to "relative" - strange but true.
-\newenvironment{sidebar}{%
-	\drawSidebarBG%
-	\begin{textblock*}{\sidebartextwidth}(\leftrightmargin, \topbottommargin)
-		}{%
-	\end{textblock*}%
-}
-
-% provide user interface for easily adding new sections in side bars
-% default: empty sidebar
-\newcommand{\frontsidebar}{}
-\newcommand{\backsidebar}{}
-\newcommand{\addtofrontsidebar}[1]{\apptocmd{\frontsidebar}{#1}{}{}}
-\newcommand{\addtobacksidebar}[1]{\apptocmd{\backsidebar}{#1}{}{}}
-\newcommand{\addtonbacksidebar}[1]{\apptocmd{\nbacksidebar}{#1}{}{}}
-\newcommand{\makefrontsidebar}{%
-	\begin{sidebar}
-		% most sidebar commands end with \par; increase space between them
-		\setlength{\parskip}{1ex}
-
-		% optionally insert logo picture before profile
-		\plotlogobefore
-
-		% optionally insert profile picture
-		\plotprofilepicture
-
-		% optionally insert logo picture after profile
-		\plotlogoafter
-
-		\vspace{1ex}
-
-		% name and job
-		\nameandjob
-
-		% personal information
-		\vspace*{0.5em}
-		\begin{icontable}[1.6]{1.7em}{0.4em}
-			\personaldata
-		\end{icontable}
-
-		% user definitions
-		\frontsidebar
-	\end{sidebar}
-}
-
-\newcommand{\makebacksidebar}{%
-	\begin{sidebar}
-		% begin with name instead of picture
-		\nameandjob
-
-		% make sure there is no space at top, but after cvjob
-		\setlength{\parskip}{1ex}
-
-		% user definitions
-		\backsidebar
-	\end{sidebar}
-}
-
-\newcommand{\makenbacksidebar}{%
-	\begin{sidebar}
-		% begin with name instead of picture
-		\nameandjob
-
-		% make sure there is no space at top, but after cvjob
-		\setlength{\parskip}{1ex}
-		\plotlogobefore
-		% user definitions
-		\backsidebar
-	\end{sidebar}
-}
-
-%-------------------------------------------------------------------------------
-%                              LIST ENVIRONMENTS
-%-------------------------------------------------------------------------------
-% reduce space between table columns to minimum
-\setlength{\tabcolsep}{0pt}
-
-% cv list environment --> table, left aligned, width=textwidth
-% tabular starred version adds space to make table as wide as \textwidth here
-\newenvironment{cvtable}[1][1]{%
-	\renewcommand{\arraystretch}{#1}%
-	\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}ll}%
-		}{%
-	\end{tabular*}%
-}
-
-% | <keyword>      <one-line description>            |
-% use parbox if text needs to use multiple lines
-\newcommand{\cvitemshort}[2]{%
-	\parbox[t]{0.17\textwidth}{\raggedright #1}
-	& \parbox[t]{0.81\textwidth}{#2} \\}
-
-% | <date>         <bold-title>  \hfill  <location>  |
-% |                <longer description>              |
-% or, if description is empty:
-% | <date>         <title>       \hfill  <location>  |
-\newcommand{\cvitem}[4]{%
-	\parbox[t]{0.17\textwidth}{\raggedright #1} &%
-	\parbox[t]{0.81\textwidth}{%
-		\if\relax\detokenize{#4}\relax%
-			\parbox[t]{\linewidth-\widthof{\footnotesize #3}-1em}{\raggedright #2}%
-			\hfill {\footnotesize#3}%
-		\else%
-			\parbox[t]{\linewidth-\widthof{\footnotesize #3}-1em}{%
-				\raggedright \textbf{#2}%
-			} \hfill {\footnotesize#3} \\%
-			\textcolor{itemtextcolor}{#4}%\vspace{\parsep}%
-		\fi%
-	}\\
-}
-
-% publication item
-% \cvpubitem{<title>}{<author>}{<journal>}{<year>} will produce
-% | <year>         <bold title>                      |
-% |                <italic author>                   |
-% |                <journal>                         |
-\newcommand{\cvpubitem}[4]{%
-	\parbox[t]{0.17\textwidth}{\raggedright #4} &
-	\parbox[t]{0.81\textwidth}{%
-		\textbf{#1} \par \textit{#2} \par #3 \vspace{\parsep}%
-	}\\
-}
-
-% EOF - sixtysecondscv.cls
